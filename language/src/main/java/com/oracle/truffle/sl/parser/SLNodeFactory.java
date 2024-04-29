@@ -368,6 +368,9 @@ public class SLNodeFactory {
 
         final SLExpressionNode result;
         switch (opToken.getText()) {
+            case "matmul":
+                result = SLMulNodeGen.create(leftUnboxed, rightUnboxed);
+                break;
             case "+":
                 result = SLAddNodeGen.create(leftUnboxed, rightUnboxed);
                 break;

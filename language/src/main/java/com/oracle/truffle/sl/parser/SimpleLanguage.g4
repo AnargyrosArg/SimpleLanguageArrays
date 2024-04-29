@@ -252,7 +252,7 @@ term returns [SLExpressionNode result]
 :
 factor                                          { $result = $factor.result; }
 (
-    op=('*' | '/')
+    op=('*' | '/' | 'matmul') // matmul should be treated as an factor?
     factor                                      { $result = factory.createBinary($op, $result, $factor.result); }
 )*
 ;

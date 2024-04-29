@@ -1,4 +1,4 @@
-// Generated from language/src/main/java/com/oracle/truffle/sl/parser/SimpleLanguage.g4 by ANTLR 4.12.0
+// Generated from SimpleLanguage.g4 by ANTLR 4.12.0
 package com.oracle.truffle.sl.parser;
 
 // DO NOT MODIFY - generated from SimpleLanguage.g4 using "mx create-sl-parser"
@@ -34,8 +34,9 @@ public class SimpleLanguageParser extends Parser {
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
 		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, T__22=23, T__23=24, 
-		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, WS=31, COMMENT=32, 
-		LINE_COMMENT=33, IDENTIFIER=34, STRING_LITERAL=35, NUMERIC_LITERAL=36;
+		T__24=25, T__25=26, T__26=27, T__27=28, T__28=29, T__29=30, T__30=31, 
+		WS=32, COMMENT=33, LINE_COMMENT=34, IDENTIFIER=35, STRING_LITERAL=36, 
+		NUMERIC_LITERAL=37;
 	public static final int
 		RULE_simplelanguage = 0, RULE_function = 1, RULE_block = 2, RULE_statement = 3, 
 		RULE_while_statement = 4, RULE_if_statement = 5, RULE_return_statement = 6, 
@@ -55,7 +56,7 @@ public class SimpleLanguageParser extends Parser {
 			null, "'function'", "'('", "','", "')'", "'{'", "'}'", "'break'", "';'", 
 			"'continue'", "'debugger'", "'while'", "'if'", "'else'", "'return'", 
 			"'||'", "'&&'", "'<'", "'<='", "'>'", "'>='", "'=='", "'!='", "'+'", 
-			"'-'", "'*'", "'/'", "'='", "'.'", "'['", "']'"
+			"'-'", "'*'", "'/'", "'matmul'", "'='", "'.'", "'['", "']'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
@@ -63,7 +64,7 @@ public class SimpleLanguageParser extends Parser {
 		return new String[] {
 			null, null, null, null, null, null, null, null, null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			null, null, null, null, null, null, null, "WS", "COMMENT", "LINE_COMMENT", 
+			null, null, null, null, null, null, null, null, "WS", "COMMENT", "LINE_COMMENT", 
 			"IDENTIFIER", "STRING_LITERAL", "NUMERIC_LITERAL"
 		};
 	}
@@ -325,7 +326,7 @@ public class SimpleLanguageParser extends Parser {
 			setState(64);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 120259108484L) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 240518192772L) != 0)) {
 				{
 				{
 				setState(59);
@@ -614,7 +615,7 @@ public class SimpleLanguageParser extends Parser {
 			setState(120);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 120259084292L) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 240518168580L) != 0)) {
 				{
 				setState(117);
 				((Return_statementContext)_localctx).expression = expression();
@@ -925,7 +926,7 @@ public class SimpleLanguageParser extends Parser {
 					setState(168);
 					((TermContext)_localctx).op = _input.LT(1);
 					_la = _input.LA(1);
-					if ( !(_la==T__24 || _la==T__25) ) {
+					if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 234881024L) != 0)) ) {
 						((TermContext)_localctx).op = (Token)_errHandler.recoverInline(this);
 					}
 					else {
@@ -1107,7 +1108,7 @@ public class SimpleLanguageParser extends Parser {
 				setState(210);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 120259084292L) != 0)) {
+				if ((((_la) & ~0x3f) == 0 && ((1L << _la) & 240518168580L) != 0)) {
 					{
 					setState(199);
 					((Member_expressionContext)_localctx).expression = expression();
@@ -1137,10 +1138,10 @@ public class SimpleLanguageParser extends Parser {
 				 ((Member_expressionContext)_localctx).result =  factory.createCall(receiver, parameters, ((Member_expressionContext)_localctx).e); 
 				}
 				break;
-			case T__26:
+			case T__27:
 				{
 				setState(214);
-				match(T__26);
+				match(T__27);
 				setState(215);
 				((Member_expressionContext)_localctx).expression = expression();
 				 if (assignmentName == null) {
@@ -1152,10 +1153,10 @@ public class SimpleLanguageParser extends Parser {
 				                                                  } 
 				}
 				break;
-			case T__27:
+			case T__28:
 				{
 				setState(218);
-				match(T__27);
+				match(T__28);
 				 if (receiver == null) {
 				                                                       receiver = factory.createRead(assignmentName);
 				                                                  } 
@@ -1165,10 +1166,10 @@ public class SimpleLanguageParser extends Parser {
 				                                                  ((Member_expressionContext)_localctx).result =  factory.createReadProperty(receiver, nestedAssignmentName); 
 				}
 				break;
-			case T__28:
+			case T__29:
 				{
 				setState(222);
-				match(T__28);
+				match(T__29);
 				 if (receiver == null) {
 				                                                      receiver = factory.createRead(assignmentName);
 				                                                  } 
@@ -1177,7 +1178,7 @@ public class SimpleLanguageParser extends Parser {
 				 nestedAssignmentName = ((Member_expressionContext)_localctx).expression.result;
 				                                                  ((Member_expressionContext)_localctx).result =  factory.createReadProperty(receiver, nestedAssignmentName); 
 				setState(226);
-				match(T__29);
+				match(T__30);
 				}
 				break;
 			default:
@@ -1208,7 +1209,7 @@ public class SimpleLanguageParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001$\u00ec\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001%\u00ec\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
 		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0002\u000b\u0007\u000b\u0002"+
@@ -1243,7 +1244,7 @@ public class SimpleLanguageParser extends Parser {
 		"\r\u0001\r\u0001\r\u0001\r\u0001\r\u0001\r\u0003\r\u00e5\b\r\u0001\r\u0001"+
 		"\r\u0001\r\u0003\r\u00ea\b\r\u0001\r\u0000\u0000\u000e\u0000\u0002\u0004"+
 		"\u0006\b\n\f\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u0000\u0003\u0001"+
-		"\u0000\u0011\u0016\u0001\u0000\u0017\u0018\u0001\u0000\u0019\u001a\u00f8"+
+		"\u0000\u0011\u0016\u0001\u0000\u0017\u0018\u0001\u0000\u0019\u001b\u00f8"+
 		"\u0000\u001c\u0001\u0000\u0000\u0000\u0002%\u0001\u0000\u0000\u0000\u0004"+
 		"9\u0001\u0000\u0000\u0000\u0006\\\u0001\u0000\u0000\u0000\b^\u0001\u0000"+
 		"\u0000\u0000\ne\u0001\u0000\u0000\u0000\fs\u0001\u0000\u0000\u0000\u000e"+
@@ -1255,9 +1256,9 @@ public class SimpleLanguageParser extends Parser {
 		"\u0000\u0000 \u001e\u0001\u0000\u0000\u0000 !\u0001\u0000\u0000\u0000"+
 		"!#\u0001\u0000\u0000\u0000\" \u0001\u0000\u0000\u0000#$\u0005\u0000\u0000"+
 		"\u0001$\u0001\u0001\u0000\u0000\u0000%&\u0005\u0001\u0000\u0000&\'\u0005"+
-		"\"\u0000\u0000\'(\u0005\u0002\u0000\u0000(3\u0006\u0001\uffff\uffff\u0000"+
-		")*\u0005\"\u0000\u0000*0\u0006\u0001\uffff\uffff\u0000+,\u0005\u0003\u0000"+
-		"\u0000,-\u0005\"\u0000\u0000-/\u0006\u0001\uffff\uffff\u0000.+\u0001\u0000"+
+		"#\u0000\u0000\'(\u0005\u0002\u0000\u0000(3\u0006\u0001\uffff\uffff\u0000"+
+		")*\u0005#\u0000\u0000*0\u0006\u0001\uffff\uffff\u0000+,\u0005\u0003\u0000"+
+		"\u0000,-\u0005#\u0000\u0000-/\u0006\u0001\uffff\uffff\u0000.+\u0001\u0000"+
 		"\u0000\u0000/2\u0001\u0000\u0000\u00000.\u0001\u0000\u0000\u000001\u0001"+
 		"\u0000\u0000\u000014\u0001\u0000\u0000\u000020\u0001\u0000\u0000\u0000"+
 		"3)\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000045\u0001\u0000\u0000"+
@@ -1320,12 +1321,12 @@ public class SimpleLanguageParser extends Parser {
 		"\u0000\u0000\u00ac\u00a8\u0001\u0000\u0000\u0000\u00ad\u00b0\u0001\u0000"+
 		"\u0000\u0000\u00ae\u00ac\u0001\u0000\u0000\u0000\u00ae\u00af\u0001\u0000"+
 		"\u0000\u0000\u00af\u0017\u0001\u0000\u0000\u0000\u00b0\u00ae\u0001\u0000"+
-		"\u0000\u0000\u00b1\u00b2\u0005\"\u0000\u0000\u00b2\u00b7\u0006\f\uffff"+
+		"\u0000\u0000\u00b1\u00b2\u0005#\u0000\u0000\u00b2\u00b7\u0006\f\uffff"+
 		"\uffff\u0000\u00b3\u00b4\u0003\u001a\r\u0000\u00b4\u00b5\u0006\f\uffff"+
 		"\uffff\u0000\u00b5\u00b8\u0001\u0000\u0000\u0000\u00b6\u00b8\u0006\f\uffff"+
 		"\uffff\u0000\u00b7\u00b3\u0001\u0000\u0000\u0000\u00b7\u00b6\u0001\u0000"+
-		"\u0000\u0000\u00b8\u00c3\u0001\u0000\u0000\u0000\u00b9\u00ba\u0005#\u0000"+
-		"\u0000\u00ba\u00c3\u0006\f\uffff\uffff\u0000\u00bb\u00bc\u0005$\u0000"+
+		"\u0000\u0000\u00b8\u00c3\u0001\u0000\u0000\u0000\u00b9\u00ba\u0005$\u0000"+
+		"\u0000\u00ba\u00c3\u0006\f\uffff\uffff\u0000\u00bb\u00bc\u0005%\u0000"+
 		"\u0000\u00bc\u00c3\u0006\f\uffff\uffff\u0000\u00bd\u00be\u0005\u0002\u0000"+
 		"\u0000\u00be\u00bf\u0003\u000e\u0007\u0000\u00bf\u00c0\u0005\u0004\u0000"+
 		"\u0000\u00c0\u00c1\u0006\f\uffff\uffff\u0000\u00c1\u00c3\u0001\u0000\u0000"+
@@ -1341,13 +1342,13 @@ public class SimpleLanguageParser extends Parser {
 		"\u0000\u00d0\u00d3\u0001\u0000\u0000\u0000\u00d1\u00cf\u0001\u0000\u0000"+
 		"\u0000\u00d2\u00c7\u0001\u0000\u0000\u0000\u00d2\u00d3\u0001\u0000\u0000"+
 		"\u0000\u00d3\u00d4\u0001\u0000\u0000\u0000\u00d4\u00d5\u0005\u0004\u0000"+
-		"\u0000\u00d5\u00e5\u0006\r\uffff\uffff\u0000\u00d6\u00d7\u0005\u001b\u0000"+
+		"\u0000\u00d5\u00e5\u0006\r\uffff\uffff\u0000\u00d6\u00d7\u0005\u001c\u0000"+
 		"\u0000\u00d7\u00d8\u0003\u000e\u0007\u0000\u00d8\u00d9\u0006\r\uffff\uffff"+
-		"\u0000\u00d9\u00e5\u0001\u0000\u0000\u0000\u00da\u00db\u0005\u001c\u0000"+
-		"\u0000\u00db\u00dc\u0006\r\uffff\uffff\u0000\u00dc\u00dd\u0005\"\u0000"+
-		"\u0000\u00dd\u00e5\u0006\r\uffff\uffff\u0000\u00de\u00df\u0005\u001d\u0000"+
+		"\u0000\u00d9\u00e5\u0001\u0000\u0000\u0000\u00da\u00db\u0005\u001d\u0000"+
+		"\u0000\u00db\u00dc\u0006\r\uffff\uffff\u0000\u00dc\u00dd\u0005#\u0000"+
+		"\u0000\u00dd\u00e5\u0006\r\uffff\uffff\u0000\u00de\u00df\u0005\u001e\u0000"+
 		"\u0000\u00df\u00e0\u0006\r\uffff\uffff\u0000\u00e0\u00e1\u0003\u000e\u0007"+
-		"\u0000\u00e1\u00e2\u0006\r\uffff\uffff\u0000\u00e2\u00e3\u0005\u001e\u0000"+
+		"\u0000\u00e1\u00e2\u0006\r\uffff\uffff\u0000\u00e2\u00e3\u0005\u001f\u0000"+
 		"\u0000\u00e3\u00e5\u0001\u0000\u0000\u0000\u00e4\u00c5\u0001\u0000\u0000"+
 		"\u0000\u00e4\u00d6\u0001\u0000\u0000\u0000\u00e4\u00da\u0001\u0000\u0000"+
 		"\u0000\u00e4\u00de\u0001\u0000\u0000\u0000\u00e5\u00e9\u0001\u0000\u0000"+
