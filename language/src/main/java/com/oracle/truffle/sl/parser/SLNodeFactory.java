@@ -1,4 +1,4 @@
-/*
+package com.oracle.truffle.sl.parser;/*
  * Copyright (c) 2012, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
@@ -38,7 +38,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.oracle.truffle.sl.parser;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -46,6 +45,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.truffle.sl.nodes.expression.*;
+import com.oracle.truffle.sl.runtime.SLBigIntegerArray;
 import com.oracle.truffle.sl.runtime.SLStrings;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.Token;
@@ -68,26 +69,6 @@ import com.oracle.truffle.sl.nodes.controlflow.SLFunctionBodyNode;
 import com.oracle.truffle.sl.nodes.controlflow.SLIfNode;
 import com.oracle.truffle.sl.nodes.controlflow.SLReturnNode;
 import com.oracle.truffle.sl.nodes.controlflow.SLWhileNode;
-import com.oracle.truffle.sl.nodes.expression.SLAddNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLBigIntegerLiteralNode;
-import com.oracle.truffle.sl.nodes.expression.SLDivNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLEqualNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLFunctionLiteralNode;
-import com.oracle.truffle.sl.nodes.expression.SLInvokeNode;
-import com.oracle.truffle.sl.nodes.expression.SLLessOrEqualNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLLessThanNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLLogicalAndNode;
-import com.oracle.truffle.sl.nodes.expression.SLLogicalNotNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLLogicalOrNode;
-import com.oracle.truffle.sl.nodes.expression.SLLongLiteralNode;
-import com.oracle.truffle.sl.nodes.expression.SLMulNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLParenExpressionNode;
-import com.oracle.truffle.sl.nodes.expression.SLReadPropertyNode;
-import com.oracle.truffle.sl.nodes.expression.SLReadPropertyNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLStringLiteralNode;
-import com.oracle.truffle.sl.nodes.expression.SLSubNodeGen;
-import com.oracle.truffle.sl.nodes.expression.SLWritePropertyNode;
-import com.oracle.truffle.sl.nodes.expression.SLWritePropertyNodeGen;
 import com.oracle.truffle.sl.nodes.local.SLReadArgumentNode;
 import com.oracle.truffle.sl.nodes.local.SLReadLocalVariableNode;
 import com.oracle.truffle.sl.nodes.local.SLReadLocalVariableNodeGen;
@@ -349,6 +330,44 @@ public class SLNodeFactory {
         return returnNode;
     }
 
+
+
+    public SLExpressionNode createArray(ArrayList<BigInteger> values,Token s,Token e) {
+        int max_bit_length = 0;
+        for( BigInteger val : values){
+            if(val.bitLength() > max_bit_length){
+                max_bit_length = val.bitLength();
+            }
+        }
+
+        final int startPos = s.getStartIndex();
+        final int endPos = e.getStartIndex() + e.getText().length();
+
+
+        if (max_bit_length < Integer.SIZE) {
+            //smallest fit -> Integer array
+            SLIntegerArrayNode result = new SLIntegerArrayNode(values);
+            result.setSourceSection(startPos, endPos - startPos);
+            result.addExpressionTag();
+            return result;
+
+        } else if (max_bit_length < Long.SIZE) {
+            //smallest fit -> Long array
+            SLLongArrayNode result = new SLLongArrayNode(values);
+            result.setSourceSection(startPos, endPos - startPos);
+            result.addExpressionTag();
+            return result;
+
+        } else{
+            //generic case -> BigIntegerArray
+            SLBigIntegerArrayNode result = new SLBigIntegerArrayNode(values);
+            result.setSourceSection(startPos, endPos - startPos);
+            result.addExpressionTag();
+            return result;
+        }
+    }
+
+
     /**
      * Returns the corresponding subclass of {@link SLExpressionNode} for binary expressions. </br>
      * These nodes are currently not instrumented.
@@ -368,8 +387,8 @@ public class SLNodeFactory {
 
         final SLExpressionNode result;
         switch (opToken.getText()) {
-            case "matmul":
-                result = SLMulNodeGen.create(leftUnboxed, rightUnboxed);
+            case "vec_add":
+                result = SLVecAddNodeGen.create(leftUnboxed, rightUnboxed);
                 break;
             case "+":
                 result = SLAddNodeGen.create(leftUnboxed, rightUnboxed);
@@ -555,6 +574,17 @@ public class SLNodeFactory {
         result.addExpressionTag();
         return result;
     }
+
+    public SLExpressionNode createArrayInternal(Token arrayLiteralToken) {
+        SLExpressionNode result =  new SLArrayInternalNode(arrayLiteralToken.getText());
+
+        srcFromToken(result, arrayLiteralToken);
+        result.addExpressionTag();
+        return result;
+    }
+
+
+
 
     public SLExpressionNode createParenExpression(SLExpressionNode expressionNode, int start, int length) {
         if (expressionNode == null) {

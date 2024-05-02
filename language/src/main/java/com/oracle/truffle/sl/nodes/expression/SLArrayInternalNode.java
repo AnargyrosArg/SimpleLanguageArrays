@@ -40,51 +40,33 @@
  */
 package com.oracle.truffle.sl.nodes.expression;
 
-import static com.oracle.truffle.api.CompilerDirectives.shouldNotReachHere;
+import java.math.BigInteger;
+import java.util.ArrayList;
 
-import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
-import com.oracle.truffle.api.dsl.Fallback;
-import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.interop.InteropLibrary;
-import com.oracle.truffle.api.interop.UnsupportedMessageException;
-import com.oracle.truffle.api.library.CachedLibrary;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
-import com.oracle.truffle.sl.SLException;
-import com.oracle.truffle.sl.nodes.SLBinaryNode;
-import com.oracle.truffle.sl.runtime.SLBigInteger;
+import com.oracle.truffle.sl.nodes.SLExpressionNode;
+import com.oracle.truffle.sl.runtime.SLLongArray;
 
 /**
- * This class is similar to the extensively documented {@link SLAddNode}.
+ * Constant literal for an arbitrary-precision number that exceeds the range of
+ * {@link SLLongLiteralNode}.
  */
-@NodeInfo(shortName = "matmul")
-public abstract class SLMatMulNode extends SLBinaryNode {
+@NodeInfo(shortName = "const")
+public final class SLArrayInternalNode extends SLExpressionNode {
 
-    @Specialization(rewriteOn = ArithmeticException.class)
-    protected long doLong(long left, long right) {
-        return Math.multiplyExact(left, right);
+    private final SLLongArray value;
+
+    public SLArrayInternalNode(String token) {
+        this.value = new SLLongArray(token);
     }
 
-    @Specialization
-    @TruffleBoundary
-    protected SLBigInteger doSLBigInteger(SLBigInteger left, SLBigInteger right) {
-        return new SLBigInteger(left.getValue().multiply(right.getValue()));
-    }
+    public int size() {return this.value.getValues().size();}
 
-    @Specialization(replaces = "doSLBigInteger", guards = {"leftLibrary.fitsInBigInteger(left)", "rightLibrary.fitsInBigInteger(right)"}, limit = "3")
-    @TruffleBoundary
-    protected SLBigInteger doInteropBigInteger(Object left, Object right,
-                                               @CachedLibrary("left") InteropLibrary leftLibrary,
-                                               @CachedLibrary("right") InteropLibrary rightLibrary) {
-        try {
-            return new SLBigInteger(leftLibrary.asBigInteger(left).multiply(rightLibrary.asBigInteger(right)));
-        } catch (UnsupportedMessageException e) {
-            throw shouldNotReachHere(e);
-        }
-    }
+    public Long get(int index) { return this.value.getValues().get(index);}
 
-    @Fallback
-    protected Object typeError(Object left, Object right) {
-        throw SLException.typeError(this, left, right);
+    @Override
+    public SLLongArray executeGeneric(VirtualFrame frame) {
+        return value;
     }
-
 }

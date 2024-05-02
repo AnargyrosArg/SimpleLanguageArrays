@@ -49,9 +49,12 @@ grammar SimpleLanguage;
 {
 // DO NOT MODIFY - generated from SimpleLanguage.g4 using "mx create-sl-parser"
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.math.BigInteger;
+
 
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.source.Source;
@@ -240,21 +243,26 @@ arithmetic                                      { $result = $arithmetic.result; 
 
 arithmetic returns [SLExpressionNode result]
 :
-term                                            { $result = $term.result; }
-(
-    op=('+' | '-')
-    term                                        { $result = factory.createBinary($op, $result, $term.result); }
-)*
+    term                                            { $result = $term.result; }
+    (
+        op = ('+' | '-')
+        term                                        { $result = factory.createBinary($op, $result, $term.result); }
+    )*
+|
+    array                                          { $result = $array.result; }
+    (
+        op='vec_add'
+        array                                      { $result = factory.createBinary($op, $result, $array.result); }
+    )*
 ;
 
 
-term returns [SLExpressionNode result]
-:
-factor                                          { $result = $factor.result; }
-(
-    op=('*' | '/' | 'matmul') // matmul should be treated as an factor?
-    factor                                      { $result = factory.createBinary($op, $result, $factor.result); }
-)*
+term returns [SLExpressionNode result]:
+    factor                                          { $result = $factor.result; }
+    (
+        op=('*' | '/')
+        factor                                      { $result = factory.createBinary($op, $result, $factor.result); }
+    )*
 ;
 
 
@@ -326,6 +334,32 @@ member_expression [SLExpressionNode r, SLExpressionNode assignmentReceiver, SLEx
 )?
 ;
 
+
+
+array returns [SLExpressionNode result]
+:(
+s='['                                       {   ArrayList<BigInteger> values = new ArrayList<>();  }
+    (
+        NUMERIC_LITERAL                     {   values.add(new BigInteger($NUMERIC_LITERAL.getText())); }
+        (
+            ','
+            NUMERIC_LITERAL                 {   values.add(new BigInteger($NUMERIC_LITERAL.getText())); }
+        )*
+    )?
+e=']'                                       {   $result = factory.createArray(values,$s,$e); }
+|
+    IDENTIFIER                              {   SLExpressionNode assignmentName = factory.createStringLiteral($IDENTIFIER, false); }
+    (
+        member_expression[null, null, assignmentName] { $result = $member_expression.result; }
+    |
+                                                { $result = factory.createRead(assignmentName); }
+    )
+|
+     ARRAY_LITERAL_INTERNAL              {   $result = factory.createArrayInternal($ARRAY_LITERAL_INTERNAL);   }
+);
+
+
+
 // lexer
 
 WS : [ \t\r\n\u000C]+ -> skip;
@@ -340,6 +374,11 @@ fragment OCT_DIGIT : [0-7];
 fragment BINARY_DIGIT : '0' | '1';
 fragment TAB : '\t';
 fragment STRING_CHAR : ~('"' | '\r' | '\n');
+
+fragment BIG_ZERO_ARRAY_LITERAL : 'BIG_ZERO_ARRAY';
+fragment BIG_ONES_ARRAY_LITERAL : 'BIG_ONES_ARRAY';
+
+ARRAY_LITERAL_INTERNAL : (BIG_ZERO_ARRAY_LITERAL | BIG_ONES_ARRAY_LITERAL);
 
 IDENTIFIER : LETTER (LETTER | DIGIT)*;
 STRING_LITERAL : '"' STRING_CHAR* '"';

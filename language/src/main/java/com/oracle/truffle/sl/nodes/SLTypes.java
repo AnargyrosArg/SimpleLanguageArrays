@@ -41,6 +41,7 @@
 package com.oracle.truffle.sl.nodes;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.ImplicitCast;
@@ -48,8 +49,9 @@ import com.oracle.truffle.api.dsl.TypeCast;
 import com.oracle.truffle.api.dsl.TypeCheck;
 import com.oracle.truffle.api.dsl.TypeSystem;
 import com.oracle.truffle.sl.SLLanguage;
-import com.oracle.truffle.sl.runtime.SLBigInteger;
-import com.oracle.truffle.sl.runtime.SLNull;
+import com.oracle.truffle.sl.nodes.expression.SLLongArrayNode;
+import com.oracle.truffle.sl.runtime.*;
+import org.graalvm.nativeimage.c.struct.CTypedefOfInfo;
 
 /**
  * The type system of SL, as explained in {@link SLLanguage}. Based on the {@link TypeSystem}
@@ -94,4 +96,37 @@ public abstract class SLTypes {
     public static SLBigInteger castBigNumber(long value) {
         return new SLBigInteger(BigInteger.valueOf(value));
     }
+
+    @ImplicitCast
+    @TruffleBoundary
+    public static SLLongArray castIntToLongArray(SLIntegerArray value) {
+        ArrayList<Long> longValues = new ArrayList<>(value.size());
+        for(Integer val :value.getValues()){
+            longValues.add(Long.valueOf(val));
+        }
+        return new SLLongArray(longValues);
+    }
+
+    @ImplicitCast
+    @TruffleBoundary
+    public static SLBigIntegerArray castLongToBigIntegerArray(SLLongArray value) {
+
+        ArrayList<BigInteger> bigIntegers = new ArrayList<>(value.size());
+        for(Long val :value.getValues()){
+            bigIntegers.add(BigInteger.valueOf(val));
+        }
+        return new SLBigIntegerArray(bigIntegers);
+    }
+
+    @ImplicitCast
+    @TruffleBoundary
+    public static SLBigIntegerArray castIntToBigIntegerArray(SLIntegerArray value) {
+        ArrayList<BigInteger> longValues = new ArrayList<>(value.size());
+        for(Integer val :value.getValues()){
+            longValues.add(BigInteger.valueOf(val));
+        }
+        return new SLBigIntegerArray(longValues);
+    }
+
+
 }
