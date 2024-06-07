@@ -57,6 +57,32 @@ public final class SLIntegerArray implements TruffleObject{
 
     private final ArrayList<Integer> values;
 
+    public SLIntegerArray(ArrayList<Integer> values) {
+        this.values = values;
+    }
+
+    public ArrayList<Integer> getValues() {
+        return values;
+    }
+
+    public int size(){
+        return this.values.size();
+    }
+
+    public Integer get(int index){
+        return this.values.get(index);
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
+
+
+    boolean valuesFitInLong() {
+        return true;
+    }
+
     public SLIntegerArray() {
         this.values = new ArrayList<Integer>();
         for(int i=0; i< 1000; i++){
@@ -88,34 +114,6 @@ public final class SLIntegerArray implements TruffleObject{
         }
 
     }
-
-    public SLIntegerArray(ArrayList<Integer> values) {
-        this.values = values;
-    }
-
-
-    public ArrayList<Integer> getValues() {
-        return values;
-    }
-
-    public int size(){
-        return this.values.size();
-    }
-
-    public Integer get(int index){
-        return this.values.get(index);
-    }
-
-    @Override
-    public int hashCode() {
-        return values.hashCode();
-    }
-
-
-    boolean valuesFitInLong() {
-        return true;
-    }
-
 
     boolean valuesFitInInt() {
         for(Integer val : values){

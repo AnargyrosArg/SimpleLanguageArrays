@@ -100,6 +100,7 @@ public abstract class SLTypes {
     @ImplicitCast
     @TruffleBoundary
     public static SLLongArray castIntToLongArray(SLIntegerArray value) {
+//        System.out.println("Implicit cast Integer Array -> Long Array ");
         ArrayList<Long> longValues = new ArrayList<>(value.size());
         for(Integer val :value.getValues()){
             longValues.add(Long.valueOf(val));
@@ -110,7 +111,7 @@ public abstract class SLTypes {
     @ImplicitCast
     @TruffleBoundary
     public static SLBigIntegerArray castLongToBigIntegerArray(SLLongArray value) {
-
+//        System.out.println("Implicit cast Long Array -> BigInteger Array ");
         ArrayList<BigInteger> bigIntegers = new ArrayList<>(value.size());
         for(Long val :value.getValues()){
             bigIntegers.add(BigInteger.valueOf(val));
@@ -121,6 +122,7 @@ public abstract class SLTypes {
     @ImplicitCast
     @TruffleBoundary
     public static SLBigIntegerArray castIntToBigIntegerArray(SLIntegerArray value) {
+//        System.out.println("Implicit cast Integer Array -> BigInteger Array ");
         ArrayList<BigInteger> longValues = new ArrayList<>(value.size());
         for(Integer val :value.getValues()){
             longValues.add(BigInteger.valueOf(val));

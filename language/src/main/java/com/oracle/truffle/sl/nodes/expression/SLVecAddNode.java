@@ -40,7 +40,6 @@
  */
 package com.oracle.truffle.sl.nodes.expression;
 
-import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.dsl.Fallback;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
@@ -62,6 +61,7 @@ public abstract class SLVecAddNode extends SLBinaryNode {
 
     @Specialization(rewriteOn = ArithmeticException.class)
     protected SLIntegerArray doSLIntegerArray(SLIntegerArray left,SLIntegerArray right) {
+//        System.out.println("Entering Integer Specialization");
         if(left.size()!=right.size()) {
             System.out.println("Arrays not of same size!");
             System.exit(1);
@@ -70,32 +70,32 @@ public abstract class SLVecAddNode extends SLBinaryNode {
         for(int i = 0; i < left.size(); i++){
             result.add(Math.addExact(left.get(i), right.get(i)));
         }
+//        System.out.println("Integer Specialization!\n");
         return new SLIntegerArray(result);
     }
 
-
-    @Specialization(replaces = "doSLIntegerArray")
+    @Specialization(rewriteOn = ArithmeticException.class, replaces = "doSLIntegerArray")
     @TruffleBoundary
     protected SLLongArray doSLLongArray(SLLongArray left, SLLongArray right) {
-
+//        System.out.println("Entering Long Specialization");
         if(left.size()!=right.size()) {
             System.out.println("Arrays not of same size!");
             System.exit(1);
         }
-
-
         ArrayList<Long> result = new ArrayList<>();
         for(int i = 0; i < left.size(); i++){
             result.add(Math.addExact(left.get(i), right.get(i)));
         }
+//        System.out.println("Long Specialization!\n");
         return new SLLongArray(result);
     }
 
 
-    @Specialization(replaces = "doSLLongArray" , guards = "areBigIntegers(left,right)")
+    @Specialization(rewriteOn = ArithmeticException.class,replaces = "doSLLongArray")
+//    @Specialization(rewriteOn = ArithmeticException.class)
     @TruffleBoundary
     protected SLBigIntegerArray doSLBigIntegerArray(SLBigIntegerArray left, SLBigIntegerArray right) {
-
+//        System.out.println("Entering BigInteger Specialization");
         if(left.size()!=right.size()) {
             System.out.println("Arrays not of same size!");
             System.exit(1);
@@ -104,6 +104,7 @@ public abstract class SLVecAddNode extends SLBinaryNode {
         for(int i = 0; i < left.size(); i++){
             result.add(left.get(i).add(right.get(i)));
         }
+//        System.out.println("Big Integer Specialization!\n");
         return new SLBigIntegerArray(result);
     }
 
@@ -117,4 +118,45 @@ public abstract class SLVecAddNode extends SLBinaryNode {
     protected boolean areBigIntegers(Object a, Object b) {
         return a instanceof BigInteger || b instanceof BigInteger;
     }
+    protected boolean isCudaEnabled() {
+        return cudaEnabled;
+    }
+    final boolean cudaEnabled = true;
+
+//    @Specialization(guards = "isCudaEnabled()")
+//    protected SLIntegerArray doSLIntegerArrayCUDA (SLIntegerArray left, SLIntegerArray right){
+//        System.out.println("USING CUDA FOR VEC_ADD!");
+//        if(left.size()!=right.size()) {
+//            System.out.println("Arrays not of same size!");
+//            System.exit(1);
+//        }
+//        //Initialize cublas context
+//        JCublas.initialize();
+//
+//        //convert arraylists to int arrays
+//        int[] vec1 = left.getValues().stream().mapToInt(i -> i).toArray();
+//        int[] vec2 = right.getValues().stream().mapToInt(i -> i).toArray();
+//
+//        //Prepare pointers for vectors
+//        Pointer p_vec1 = new Pointer();
+//        Pointer p_vec2 = new Pointer();
+//
+//        //Allocate device memory at those pointers
+//        JCublas.cublasAlloc(left.size(), Sizeof.INT, p_vec1);
+//        JCublas.cublasAlloc(left.size(), Sizeof.INT, p_vec2);
+//
+//        //Copy vectors from host -> device memory
+//        JCublas.cublasSetVector(left.size(), Sizeof.INT,Pointer.to(vec1),1,p_vec1,1);
+//        JCublas.cublasSetVector(right.size(),Sizeof.INT,Pointer.to(vec2),1,p_vec2,1);
+//
+//        //Perform addition operation
+//        JCublas.cublasSaxpy(left.size(), Sizeof.INT,p_vec1,1,p_vec2,1);
+//
+//        //Get result vector from device
+//        JCublas.cublasGetVector(left.size(),Sizeof.INT,p_vec1,1,Pointer.to(vec1),1);
+//
+//        ArrayList<Integer> result = new ArrayList<>();
+//        Collections.addAll(result, Arrays.stream(vec1).boxed().toArray(Integer[]::new));
+//        return new SLIntegerArray(result);
+//    }
 }

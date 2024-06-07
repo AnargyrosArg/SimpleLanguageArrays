@@ -343,7 +343,6 @@ public class SLNodeFactory {
         final int startPos = s.getStartIndex();
         final int endPos = e.getStartIndex() + e.getText().length();
 
-
         if (max_bit_length < Integer.SIZE) {
             //smallest fit -> Integer array
             SLIntegerArrayNode result = new SLIntegerArrayNode(values);

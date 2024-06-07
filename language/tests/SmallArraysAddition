@@ -1,0 +1,13 @@
+function main() {
+    vec1 = [0,0,0,0,0,0,0,0,0,0];
+    vec2 = [1,1,1,1,1,1,1,1,1,1];
+    i = 0;
+    while (i < 50000000) {
+        vec1 = vec1 vec_add vec2;
+        i = i+1;
+    }
+    return i;
+}
+
+
+
