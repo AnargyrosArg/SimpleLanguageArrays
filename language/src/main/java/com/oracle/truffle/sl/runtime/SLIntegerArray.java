@@ -91,7 +91,7 @@ public final class SLIntegerArray implements TruffleObject{
     }
 
     public SLIntegerArray(String token) {
-        final int n_iter = 1000;
+        final int n_iter = 10000;
         this.values = new ArrayList<Integer>();
 
         switch(token) {

@@ -60,7 +60,7 @@ public final class SLLongArray implements TruffleObject{
     private final ArrayList<Long> values;
 
     public SLLongArray(String token) {
-        final int n_iter = 1000;
+        final int n_iter = 10000;
         this.values = new ArrayList<Long>();
 
         switch(token) {

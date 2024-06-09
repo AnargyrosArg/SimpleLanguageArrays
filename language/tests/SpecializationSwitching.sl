@@ -1,5 +1,7 @@
 function main() {
-  //Elements of size MAX_INT - 1
+    i = 0;
+    while (i < 10000000) {
+//Elements of size MAX_INT - 1
   vec1 = [2147483646,
           2147483646,
           2147483646,
@@ -19,6 +21,9 @@ function main() {
                        9223372036854775807,
                        9223372036854775807,
                        9223372036854775807];
+        i = i+1;
+    }
+
 }
 
 
