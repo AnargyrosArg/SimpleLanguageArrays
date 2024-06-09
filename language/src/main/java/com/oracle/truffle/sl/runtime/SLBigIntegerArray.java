@@ -68,7 +68,7 @@ public final class SLBigIntegerArray implements TruffleObject{
     }
 
     public SLBigIntegerArray(String token) {
-        final int n_iter = 1000;
+        final int n_iter = 10000;
         this.values = new ArrayList<BigInteger>();
 
         switch(token) {
